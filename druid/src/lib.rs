@@ -182,7 +182,7 @@ pub use shell::{
     Application, Clipboard, ClipboardFormat, Code, Cursor, CursorDesc, Error as PlatformError,
     FileDialogOptions, FileInfo, FileSpec, FormatId, HotKey, ImageBuf, KbKey, KeyEvent, Location,
     Modifiers, Monitor, MouseButton, MouseButtons, RawMods, Region, Scalable, Scale, Screen,
-    SysMods, TimerToken, WindowHandle, WindowState,
+    SysMods, TimerToken, WindowHandle, WindowState, WindowLevel,
 };
 
 pub use crate::core::WidgetPod;

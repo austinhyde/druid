@@ -433,6 +433,12 @@ impl<T: Data> WindowDesc<T> {
         self
     }
 
+    /// Set window level
+    pub fn set_level(mut self, level: WindowLevel) -> Self {
+        self.config = self.config.set_level(level);
+        self
+    }
+
     /// Attempt to create a platform window from this `WindowDesc`.
     pub(crate) fn build_native(
         self,
