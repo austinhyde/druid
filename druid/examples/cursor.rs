@@ -33,10 +33,12 @@ struct AppState {
 
 fn next_cursor(c: &Cursor, custom: &Option<Arc<Cursor>>) -> Cursor {
     match c {
-        Cursor::Arrow => Cursor::IBeam,
+        Cursor::Arrow => Cursor::Pointer,
+        Cursor::Pointer => Cursor::IBeam,
         Cursor::IBeam => Cursor::Crosshair,
         Cursor::Crosshair => Cursor::OpenHand,
-        Cursor::OpenHand => Cursor::NotAllowed,
+        Cursor::OpenHand => Cursor::ClosedHand,
+        Cursor::ClosedHand => Cursor::NotAllowed,
         Cursor::NotAllowed => Cursor::ResizeLeftRight,
         Cursor::ResizeLeftRight => Cursor::ResizeUpDown,
         Cursor::ResizeUpDown => {

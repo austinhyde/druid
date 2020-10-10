@@ -886,9 +886,11 @@ impl WindowHandle {
             let nscursor = class!(NSCursor);
             let cursor: id = match cursor {
                 Cursor::Arrow => msg_send![nscursor, arrowCursor],
+                Cursor::Pointer => msg_send![nscursor, pointingHandCursor],
                 Cursor::IBeam => msg_send![nscursor, IBeamCursor],
                 Cursor::Crosshair => msg_send![nscursor, crosshairCursor],
                 Cursor::OpenHand => msg_send![nscursor, openHandCursor],
+                Cursor::ClosedHand => msg_send![nscursor, closedHandCursor],
                 Cursor::NotAllowed => msg_send![nscursor, operationNotAllowedCursor],
                 Cursor::ResizeLeftRight => msg_send![nscursor, resizeLeftRightCursor],
                 Cursor::ResizeUpDown => msg_send![nscursor, resizeUpDownCursor],

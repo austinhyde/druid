@@ -247,10 +247,13 @@ impl std::fmt::Debug for MouseButtons {
 pub enum Cursor {
     /// The default arrow cursor.
     Arrow,
+    /// A pointing hand, for indicating a clickable link or button
+    Pointer,
     /// A vertical I-beam, for indicating insertion points in text.
     IBeam,
     Crosshair,
     OpenHand,
+    ClosedHand,
     NotAllowed,
     ResizeLeftRight,
     ResizeUpDown,
