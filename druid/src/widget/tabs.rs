@@ -558,7 +558,9 @@ fn hidden_should_receive_event(evt: &Event) -> bool {
         | Event::Timer(_)
         | Event::AnimFrame(_)
         | Event::Command(_)
-        | Event::Internal(_) => true,
+        | Event::Internal(_)
+        | Event::WindowFocus(_)
+        | Event::WindowBlur(_) => true,
         Event::MouseDown(_)
         | Event::MouseUp(_)
         | Event::MouseMove(_)

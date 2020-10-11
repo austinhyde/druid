@@ -19,6 +19,7 @@ use crate::kurbo::{Rect, Shape, Size, Vec2};
 use druid_shell::{Clipboard, KeyEvent, TimerToken};
 
 use crate::mouse::MouseEvent;
+use crate::window::{WindowFocusEvent, WindowBlurEvent};
 use crate::{Command, WidgetId};
 
 /// An event, propagated downwards during event flow.
@@ -136,6 +137,10 @@ pub enum Event {
     ///
     /// [`WidgetPod`]: struct.WidgetPod.html
     Internal(InternalEvent),
+    /// Called when a window receives focus
+    WindowFocus(WindowFocusEvent),
+    /// Called when a window loses focus
+    WindowBlur(WindowBlurEvent),
 }
 
 /// Internal events used by druid inside [`WidgetPod`].

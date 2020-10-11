@@ -62,6 +62,9 @@ use crate::Error;
 #[allow(non_upper_case_globals)]
 const NSWindowDidBecomeKeyNotification: &str = "NSWindowDidBecomeKeyNotification";
 
+#[allow(non_upper_case_globals)]
+const NSWindowDidResignKeyNotification: &str = "NSWindowDidResignKeyNotification";
+
 #[allow(dead_code)]
 #[allow(non_upper_case_globals)]
 mod levels {
@@ -329,6 +332,10 @@ lazy_static! {
         decl.add_method(
             sel!(windowDidBecomeKey:),
             window_did_become_key as extern "C" fn(&mut Object, Sel, id),
+        );
+        decl.add_method(
+            sel!(windowDidResignKey:),
+            window_did_resign_key as extern "C" fn(&mut Object, Sel, id),
         );
         decl.add_method(
             sel!(setFrameSize:),
@@ -814,6 +821,14 @@ extern "C" fn window_did_become_key(this: &mut Object, _: Sel, _notification: id
     }
 }
 
+extern "C" fn window_did_resign_key(this: &mut Object, _: Sel, _notification: id) {
+    unsafe {
+        let view_state: *mut c_void = *this.get_ivar("viewState");
+        let view_state = &mut *(view_state as *mut ViewState);
+        (*view_state).handler.lost_focus();
+    }
+}
+
 extern "C" fn window_will_close(this: &mut Object, _: Sel, _window: id) {
     unsafe {
         let view_state: *mut c_void = *this.get_ivar("viewState");
@@ -826,13 +841,20 @@ impl WindowHandle {
     pub fn show(&self) {
         unsafe {
             let window: id = msg_send![*self.nsview.load(), window];
-            // register our view class to be alerted when it becomes the key view.
+            // register our view class to be alerted when it becomes or resigns the key view.
             let notif_center_class = class!(NSNotificationCenter);
-            let notif_string = NSString::alloc(nil)
+            let notif_center: id = msg_send![notif_center_class, defaultCenter];
+
+            let notif_become_string = NSString::alloc(nil)
                 .init_str(NSWindowDidBecomeKeyNotification)
                 .autorelease();
-            let notif_center: id = msg_send![notif_center_class, defaultCenter];
-            let () = msg_send![notif_center, addObserver:*self.nsview.load() selector: sel!(windowDidBecomeKey:) name: notif_string object: window];
+            let () = msg_send![notif_center, addObserver:*self.nsview.load() selector: sel!(windowDidBecomeKey:) name: notif_become_string object: window];
+
+            let notif_resign_string = NSString::alloc(nil)
+                .init_str(NSWindowDidResignKeyNotification)
+                .autorelease();
+            let () = msg_send![notif_center, addObserver:*self.nsview.load() selector: sel!(windowDidResignKey:) name: notif_resign_string object: window];
+
             window.makeKeyAndOrderFront_(nil)
         }
     }

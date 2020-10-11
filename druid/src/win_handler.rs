@@ -27,7 +27,7 @@ use crate::app_delegate::{AppDelegate, DelegateCtx};
 use crate::core::CommandQueue;
 use crate::ext_event::{ExtEventHost, ExtEventSink};
 use crate::menu::ContextMenu;
-use crate::window::Window;
+use crate::window::{Window, WindowBlurEvent, WindowFocusEvent};
 use crate::{
     Command, Data, Env, Event, Handled, InternalEvent, KeyEvent, MenuDesc, PlatformError, Target,
     TimerToken, WindowDesc, WindowId,
@@ -485,7 +485,14 @@ impl<T: Data> AppState<T> {
     }
 
     fn window_got_focus(&mut self, window_id: WindowId) {
-        self.inner.borrow_mut().window_got_focus(window_id)
+        self.inner.borrow_mut().window_got_focus(window_id);
+        let event = Event::WindowFocus(WindowFocusEvent::new(window_id));
+        self.do_window_event(event, window_id);
+    }
+
+    fn window_lost_focus(&mut self, window_id: WindowId) {
+        let event = Event::WindowBlur(WindowBlurEvent::new(window_id));
+        self.do_window_event(event, window_id);
     }
 
     /// Send an event to the widget hierarchy.
@@ -803,6 +810,9 @@ impl<T: Data> WinHandler for DruidHandler<T> {
 
     fn got_focus(&mut self) {
         self.app_state.window_got_focus(self.window_id);
+    }
+    fn lost_focus(&mut self) {
+        self.app_state.window_lost_focus(self.window_id);
     }
 
     fn timer(&mut self, token: TimerToken) {

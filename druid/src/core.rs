@@ -699,6 +699,8 @@ impl<T: Data, W: Widget<T>> WidgetPod<T, W> {
             Event::Zoom(_) => had_active || self.state.is_hot,
             Event::Timer(_) => false, // This event was targeted only to our parent
             Event::Command(_) => true,
+            Event::WindowFocus(_) => true,
+            Event::WindowBlur(_) => true,
         };
 
         if recurse {

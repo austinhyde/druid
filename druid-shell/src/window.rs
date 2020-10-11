@@ -542,6 +542,10 @@ pub trait WinHandler {
     #[allow(unused_variables)]
     fn got_focus(&mut self) {}
 
+    /// Called when this window loses focus
+    #[allow(unused_variables)]
+    fn lost_focus(&mut self) {}
+
     /// Called when the shell requests to close the window, for example because the user clicked
     /// the little "X" in the titlebar.
     ///

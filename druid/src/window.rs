@@ -57,6 +57,34 @@ pub struct Window<T> {
     // delegate?
 }
 
+#[derive(Clone, Debug)]
+pub struct WindowFocusEvent {
+    pub id: WindowId,
+}
+
+#[derive(Clone, Debug)]
+pub struct WindowBlurEvent {
+    pub id: WindowId,
+}
+
+impl WindowFocusEvent {
+    pub fn new(id: WindowId) -> Self {
+        Self {
+            id
+        }
+    }
+}
+
+impl WindowBlurEvent {
+    pub fn new(id: WindowId) -> Self {
+        Self {
+            id
+        }
+    }
+}
+
+
+
 impl<T> Window<T> {
     pub(crate) fn new(
         id: WindowId,
