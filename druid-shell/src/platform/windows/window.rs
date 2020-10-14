@@ -638,7 +638,16 @@ impl WndProc for MyWndProc {
                     self.log_dropped_msg(hwnd, msg, wparam, lparam);
                 }
                 Some(0)
-            }
+            },
+            WM_KILLFOCUS => {
+                if let Ok(mut s) = self.state.try_borrow_mut() {
+                    let s = s.as_mut().unwrap();
+                    s.handler.lost_focus();
+                } else {
+                    self.log_dropped_msg(hwnd, msg, wparam, lparam);
+                }
+                Some(0)
+            },
             WM_PAINT => unsafe {
                 if let Ok(mut s) = self.state.try_borrow_mut() {
                     let s = s.as_mut().unwrap();
@@ -1501,9 +1510,11 @@ impl Cursor {
     fn get_hcursor(&self) -> HCURSOR {
         let name = match self {
             Cursor::Arrow => IDC_ARROW,
+            Cursor::Pointer => IDC_HAND,
             Cursor::IBeam => IDC_IBEAM,
             Cursor::Crosshair => IDC_CROSS,
-            Cursor::OpenHand => IDC_HAND,
+            Cursor::OpenHand => IDC_HAND, // TODO: This shows a pointer
+            Cursor::ClosedHand => IDC_HAND, // TODO: This shows a pointer
             Cursor::NotAllowed => IDC_NO,
             Cursor::ResizeLeftRight => IDC_SIZEWE,
             Cursor::ResizeUpDown => IDC_SIZENS,
